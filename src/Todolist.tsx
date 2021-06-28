@@ -4,9 +4,20 @@ import {TaskType} from './App';
 type TodolistPropsType = {
   title: string;
   tasks: Array<TaskType>;
+  removeTask: (taskId: number) => void;
 };
 
-const Todolist = ({title, tasks}: TodolistPropsType) => {
+const Todolist = ({title, tasks, removeTask}: TodolistPropsType) => {
+  const tasksJSXElement = tasks.map((task) => {
+    return (
+      <li key={task.id}>
+        <input type="checkbox" checked={task.isDone} />
+        <span>{task.title}</span>
+        <button onClick={() => removeTask(task.id)}>x</button>
+      </li>
+    );
+  });
+
   return (
     <div>
       <h3>{title}</h3>
@@ -14,13 +25,7 @@ const Todolist = ({title, tasks}: TodolistPropsType) => {
         <input />
         <button>+</button>
       </div>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <input type="checkbox" checked={task.isDone} /> <span>{task.title}</span>
-          </li>
-        ))}
-      </ul>
+      <ul>{tasksJSXElement}</ul>
       <div>
         <button>All</button>
         <button>Active</button>
