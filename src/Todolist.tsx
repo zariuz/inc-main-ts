@@ -1,13 +1,14 @@
 import React from 'react';
-import {TaskType} from './App';
+import { FilterValuesType, TaskType } from './App';
 
 type TodolistPropsType = {
   title: string;
   tasks: Array<TaskType>;
   removeTask: (taskId: number) => void;
+  changeFilter: (value: FilterValuesType) => void;
 };
 
-const Todolist = ({title, tasks, removeTask}: TodolistPropsType) => {
+const Todolist = ({ title, tasks, removeTask, changeFilter }: TodolistPropsType) => {
   const tasksJSXElement = tasks.map((task) => {
     return (
       <li key={task.id}>
@@ -27,9 +28,9 @@ const Todolist = ({title, tasks, removeTask}: TodolistPropsType) => {
       </div>
       <ul>{tasksJSXElement}</ul>
       <div>
-        <button>All</button>
-        <button>Active</button>
-        <button>Completed</button>
+        <button onClick={() => changeFilter('all')}>All</button>
+        <button onClick={() => changeFilter('active')}>Active</button>
+        <button onClick={() => changeFilter('completed')}>Completed</button>
       </div>
     </div>
   );
