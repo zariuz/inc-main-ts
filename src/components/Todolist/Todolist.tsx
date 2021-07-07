@@ -17,19 +17,34 @@ const Todolist = ({
   changeFilter,
 }: TodolistPropsType) => {
   const [title, setTitle] = useState('');
+
   const changeAddTask = () => {
-    if (title.length > 0) {
+    if (title.length > 0 && title !== ' ') {
       addTask(title);
     }
     setTitle('');
   };
 
-  const tasksJSXElement = tasks.map((task) => {
+  const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setTitle(e.target.value);
+  const onKeyEnterHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      addTask(title);
+      setTitle('');
+    }
+  };
+  const onAllClickHandler = () => changeFilter('all');
+  const onActiveClickHandler = () => changeFilter('active');
+  const onCompletedClickHandler = () => changeFilter('completed');
+
+  const tasksElement = tasks.map((task) => {
+    const onClickRemoveTask = () => removeTask(task.id);
+
     return (
       <li key={task.id}>
         <input type="checkbox" checked={task.isDone} />
         <span>{task.title}</span>
-        <button onClick={() => removeTask(task.id)}>x</button>
+        <button onClick={onClickRemoveTask}>x</button>
       </li>
     );
   });
@@ -40,21 +55,16 @@ const Todolist = ({
       <div>
         <input
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              addTask(title);
-              setTitle('');
-            }
-          }}
+          onChange={onTitleChangeHandler}
+          onKeyPress={onKeyEnterHandler}
         />
         <button onClick={changeAddTask}>+</button>
       </div>
-      <ul>{tasksJSXElement}</ul>
+      <ul>{tasksElement}</ul>
       <div>
-        <button onClick={() => changeFilter('all')}>All</button>
-        <button onClick={() => changeFilter('active')}>Active</button>
-        <button onClick={() => changeFilter('completed')}>Completed</button>
+        <button onClick={onAllClickHandler}>All</button>
+        <button onClick={onActiveClickHandler}>Active</button>
+        <button onClick={onCompletedClickHandler}>Completed</button>
       </div>
     </div>
   );
