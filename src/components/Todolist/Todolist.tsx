@@ -1,22 +1,27 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from '../../App';
+import './Todolist.css';
 
 type TodolistPropsType = {
-  name: string;
+  titleName: string;
+  todolistId: string;
   tasks: Array<TaskType>;
-  addTask: (title: string) => void;
-  removeTask: (taskId: string) => void;
-  changeFilter: (value: FilterValuesType) => void;
-  changeTaskStatus: (id: string, isDone: boolean) => void;
+  addTask: (todolistId: string, title: string) => void;
+  removeTask: (todolistId: string, taskId: string) => void;
+  changeFilter: (todolistId: string, value: FilterValuesType) => void;
+  changeTaskStatus: (todolistId: string, id: string, isDone: boolean) => void;
+  filter: FilterValuesType;
 };
 
 const Todolist = ({
-  name,
+  titleName,
+  todolistId,
   tasks,
   addTask,
   removeTask,
   changeFilter,
   changeTaskStatus,
+  filter,
 }: TodolistPropsType) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<boolean>(false);
@@ -24,7 +29,7 @@ const Todolist = ({
   const changeAddTask = () => {
     //title.trim() - checking for spaces
     if (title.trim()) {
-      addTask(title);
+      addTask(todolistId, title);
     } else {
       setError(true);
     }
@@ -37,18 +42,17 @@ const Todolist = ({
   };
   const onKeyEnterHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      addTask(title);
-      setTitle('');
+      changeAddTask();
     }
   };
-  const onAllClickHandler = () => changeFilter('all');
-  const onActiveClickHandler = () => changeFilter('active');
-  const onCompletedClickHandler = () => changeFilter('completed');
+  const onAllClickHandler = () => changeFilter(todolistId, 'all');
+  const onActiveClickHandler = () => changeFilter(todolistId, 'active');
+  const onCompletedClickHandler = () => changeFilter(todolistId, 'completed');
 
   const tasksElement = tasks.map((task) => {
-    const onClickRemoveTask = () => removeTask(task.id);
+    const onClickRemoveTask = () => removeTask(todolistId, task.id);
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      changeTaskStatus(task.id, e.currentTarget.checked);
+      changeTaskStatus(todolistId, task.id, e.currentTarget.checked);
     };
 
     return (
@@ -62,7 +66,7 @@ const Todolist = ({
 
   return (
     <div>
-      <h3>{name}</h3>
+      <h3>{titleName}</h3>
       <div>
         <input
           value={title}
@@ -75,9 +79,21 @@ const Todolist = ({
       </div>
       <ul>{tasksElement}</ul>
       <div>
-        <button onClick={onAllClickHandler}>All</button>
-        <button onClick={onActiveClickHandler}>Active</button>
-        <button onClick={onCompletedClickHandler}>Completed</button>
+        <button
+          className={filter === 'all' ? 'active-filter' : ''}
+          onClick={onAllClickHandler}>
+          All
+        </button>
+        <button
+          className={filter === 'active' ? 'active-filter' : ''}
+          onClick={onActiveClickHandler}>
+          Active
+        </button>
+        <button
+          className={filter === 'completed' ? 'active-filter' : ''}
+          onClick={onCompletedClickHandler}>
+          Completed
+        </button>
       </div>
     </div>
   );

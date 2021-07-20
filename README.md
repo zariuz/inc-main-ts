@@ -1,4 +1,6 @@
-## Available Scripts
+## Advanced ToDo
+
+TypeScript, React, Redux, Material UI, Jest, Storybook and more.
 
 In the project directory, you can run:
 
