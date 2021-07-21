@@ -12,6 +12,8 @@ export type TaskType = {
 export type FilterValuesType = 'all' | 'active' | 'completed';
 type todolistsType = {id: string; title: string; filter: FilterValuesType};
 
+export type tasksGeneralType = {[key: string]: Array<TaskType>};
+
 function App() {
   let todolistID1 = v1();
   let todolistID2 = v1();
@@ -21,7 +23,7 @@ function App() {
     {id: todolistID2, title: 'What to buy', filter: 'all'},
   ]);
 
-  let [tasks, setTasks] = useState({
+  let [tasks, setTasks] = useState<tasksGeneralType>({
     [todolistID1]: [
       {id: v1(), title: 'HTML&CSS', isDone: true},
       {id: v1(), title: 'JS', isDone: true},
@@ -43,6 +45,7 @@ function App() {
     const newTasks = tasks[todolistId];
     tasks[todolistId] = [task, ...newTasks];
     setTasks({...tasks});
+
     // setTasks([{id: v1(), title: title, isDone: false}, ...tasks]);
   };
 
@@ -52,7 +55,13 @@ function App() {
       tasks[todolistId] = currentTask.filter((t) => t.id !== taskID);
       setTasks({...tasks});
     }
+
     // setTasks(tasks.filter((t) => t.id !== taskID));
+  };
+
+  const removeTodolist = (todolistId: string) => {
+    setTodolists(todolists.filter((tl) => tl.id !== todolistId));
+    console.log(todolists);
   };
 
   const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
@@ -62,6 +71,7 @@ function App() {
       task.isDone = isDone;
       setTasks({...tasks});
     }
+
     // setTasks(tasks.map((t) => (t.id === taskId ? {...t, isDone} : t)));
   };
 
@@ -96,6 +106,7 @@ function App() {
             tasks={tasksForTodoList}
             addTask={addTask}
             removeTask={removeTask}
+            removeTodolist={removeTodolist}
             changeFilter={changeFilter}
             changeTaskStatus={changeTaskStatus}
             filter={tdM.filter}
