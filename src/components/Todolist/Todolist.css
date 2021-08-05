@@ -1,1 +1,9 @@
+.todo__list {
+  list-style: none;
+}
 
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,21 +1,28 @@
-.App {
-  padding: 30px;
-  display: flex;
+.AddItemFormStyle {
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
-.App > div {
-  margin-right: 50px;
+.news {
+  display: flex;
+  align-items: center;
+}
+
+.login {
+  display: flex;
+  justify-content: space-between;
 }
 
 .titleName {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
-.titleName button {
+/* .titleName button {
   height: 25px;
   margin-left: 5px;
-}
+} */
 
 .active-filter {
   background-color: cornflowerblue;
@@ -29,4 +36,8 @@
 
 .error-message {
   color: red;
+}
+
+.is-done {
+  opacity: 0.5;
 }

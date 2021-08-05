@@ -1,9 +1,10 @@
 import React, {ChangeEvent} from 'react';
 import {FilterValuesType, TaskType} from '../../App';
-import {Button} from '../Button/Button';
 import './Todolist.css';
 import {AddItemForm} from '../AddItemForm/AddItemForm';
 import {EditableSpan} from '../EditableSpan/EditableSpan';
+import {Button, IconButton} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
 
 type TodolistPropsType = {
   titleName: string;
@@ -56,10 +57,12 @@ const Todolist = ({
     };
 
     return (
-      <li key={t.id}>
+      <li key={t.id} className={'todo__item'}>
         <input type="checkbox" onChange={onChangeHandler} checked={t.isDone} />
         <EditableSpan title={t.title} callback={updateTaskHandler} />
-        <Button callback={onClickRemoveTask} buttonName={'X'} />
+        <IconButton onClick={onClickRemoveTask} aria-label="delete">
+          <Delete fontSize="medium" />
+        </IconButton>
       </li>
     );
   });
@@ -70,28 +73,32 @@ const Todolist = ({
         <h3>
           <EditableSpan title={titleName} callback={updateTodolistHandler} />
         </h3>
-        <Button callback={onClickRemoveTodolist} buttonName={'X'} />
+        <IconButton onClick={onClickRemoveTodolist} aria-label="delete">
+          <Delete fontSize="medium" />
+        </IconButton>
       </div>
 
       <AddItemForm callback={callbackHandler} />
 
-      <ul>{tasksElement}</ul>
+      <ul className={'todo__list'}>{tasksElement}</ul>
       <div>
         <Button
-          buttonName={'All'}
-          callback={() => generalOnClickHandler('all')}
-          style={filter === 'all' ? 'active-filter' : ''}
-        />
+          onClick={() => generalOnClickHandler('all')}
+          variant={filter === 'all' ? 'contained' : 'outlined'}
+          color="primary">
+          All
+        </Button>
         <Button
-          buttonName={'Active'}
-          callback={() => generalOnClickHandler('active')}
-          style={filter === 'active' ? 'active-filter' : ''}
-        />
+          onClick={() => generalOnClickHandler('active')}
+          variant={filter === 'active' ? 'contained' : 'outlined'}
+          color="secondary">
+          Active
+        </Button>
         <Button
-          buttonName={'Completed'}
-          callback={() => generalOnClickHandler('completed')}
-          style={filter === 'completed' ? 'active-filter' : ''}
-        />
+          onClick={() => generalOnClickHandler('completed')}
+          variant={filter === 'completed' ? 'contained' : 'outlined'}>
+          Completed
+        </Button>
       </div>
     </div>
   );
