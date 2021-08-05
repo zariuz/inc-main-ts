@@ -16,7 +16,7 @@ type TodolistPropsType = {
   changeTaskStatus: (todolistId: string, id: string, isDone: boolean) => void;
   filter: FilterValuesType;
   updateTask: (todolistId: string, id: string, title: string) => void;
-  updateTodolist: (todolistId: string, id: string, title: string) => void;
+  updateTodolist: (todolistId: string, title: string) => void;
 };
 
 const Todolist = ({
@@ -32,29 +32,34 @@ const Todolist = ({
   updateTask,
   updateTodolist,
 }: TodolistPropsType) => {
-
   const generalOnClickHandler = (value: FilterValuesType) => {
     changeFilter(todolistId, value);
   };
 
   const onClickRemoveTodolist = () => removeTodolist(todolistId);
 
+  const callbackHandler = (title: string) => {
+    addTask(todolistId, title);
+  };
+
+  const updateTodolistHandler = (title: string) => {
+    updateTodolist(todolistId, title);
+  };
+
   const tasksElement = tasks.map((t) => {
     const onClickRemoveTask = () => removeTask(todolistId, t.id);
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
       changeTaskStatus(todolistId, t.id, e.currentTarget.checked);
     };
+    const updateTaskHandler = (title: string) => {
+      updateTask(todolistId, t.id, title);
+    };
 
     return (
       <li key={t.id}>
-        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
-        <EditableSpan
-          title={t.title}
-          updateTask={updateTask}
-          todolistId={todolistId}
-          id={t.id}
-        />
-        <Button callback={onClickRemoveTask} buttonName={'X'}/>
+        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone} />
+        <EditableSpan title={t.title} callback={updateTaskHandler} />
+        <Button callback={onClickRemoveTask} buttonName={'X'} />
       </li>
     );
   });
@@ -63,17 +68,12 @@ const Todolist = ({
     <div>
       <div className="titleName">
         <h3>
-          <EditableSpan
-            title={titleName}
-            updateTask={updateTodolist}
-            todolistId={todolistId}
-            id={''}
-          />
+          <EditableSpan title={titleName} callback={updateTodolistHandler} />
         </h3>
-        <Button callback={onClickRemoveTodolist} buttonName={'X'}/>
+        <Button callback={onClickRemoveTodolist} buttonName={'X'} />
       </div>
 
-      <AddItemForm addTask={addTask} todolistId={todolistId}/>
+      <AddItemForm callback={callbackHandler} />
 
       <ul>{tasksElement}</ul>
       <div>

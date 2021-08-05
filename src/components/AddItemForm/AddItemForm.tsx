@@ -2,18 +2,17 @@ import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
 import {Button} from '../Button/Button';
 
 type PropsType = {
-  todolistId: string;
-  addTask: (todolistId: string ,title: string) => void;
+  callback: (title: string) => void;
 };
 
-export const AddItemForm: React.FC<PropsType> = ({ addTask, todolistId }) => {
+export const AddItemForm: React.FC<PropsType> = ({callback}) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<boolean>(false);
 
   const changeAddTask = () => {
     //title.trim() - checking for spaces
     if (title.trim()) {
-      addTask(todolistId, title);
+      callback(title);
     } else {
       setError(true);
     }
@@ -21,7 +20,7 @@ export const AddItemForm: React.FC<PropsType> = ({ addTask, todolistId }) => {
   };
 
   const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setTitle(e.currentTarget.value);
     setError(false);
   };
 
@@ -43,4 +42,4 @@ export const AddItemForm: React.FC<PropsType> = ({ addTask, todolistId }) => {
       {error && <div className="error-message">Title is required!</div>}
     </div>
   );
-}
+};

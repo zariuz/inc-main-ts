@@ -2,9 +2,7 @@ import React, {ChangeEvent, useState} from 'react';
 
 type PropsType = {
   title: string;
-  updateTask: (todolistId: string, id: string, title: string) => void;
-  todolistId: string;
-  id: string;
+  callback: (title: string) => void;
 };
 
 export const EditableSpan = (props: PropsType) => {
@@ -17,7 +15,7 @@ export const EditableSpan = (props: PropsType) => {
 
   const onBlurHandler = () => {
     setEdit(false);
-    props.updateTask(props.todolistId, props.id, title);
+    props.callback(title);
   };
 
   return edit ? (
