@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {v1} from 'uuid';
-import Todolist from './components/Todolist/Todolist';
+import {Todolist} from './components/Todolist/Todolist';
 import './App.css';
 import {AddItemForm} from './components/AddItemForm/AddItemForm';
 import {
@@ -23,11 +23,11 @@ export type TaskType = {
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
-export type TodolistsType = {id: string; title: string; filter: FilterValuesType};
+export type TodolistsType = { id: string; title: string; filter: FilterValuesType };
 
-export type tasksGeneralType = {[key: string]: Array<TaskType>};
+export type tasksGeneralType = { [key: string]: Array<TaskType> };
 
-function App() {
+export const App = () => {
   let todolistID1 = v1();
   let todolistID2 = v1();
 
@@ -104,7 +104,7 @@ function App() {
         <Toolbar className={'login'}>
           <div className={'news'}>
             <IconButton edge="start" color="inherit" aria-label="menu">
-              <Menu />
+              <Menu/>
             </IconButton>
             <Typography variant="h6">News</Typography>
           </div>
@@ -116,7 +116,7 @@ function App() {
 
       <Container fixed>
         <Grid container style={{padding: '20px'}}>
-          <AddItemForm callback={addTodolist} />
+          <AddItemForm callback={addTodolist}/>
         </Grid>
 
         <Grid container spacing={5}>
@@ -157,5 +157,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

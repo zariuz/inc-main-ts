@@ -20,7 +20,7 @@ type TodolistPropsType = {
   updateTodolist: (todolistId: string, title: string) => void;
 };
 
-const Todolist = ({
+export const Todolist = ({
   titleName,
   todolistId,
   tasks,
@@ -103,5 +103,3 @@ const Todolist = ({
     </div>
   );
 };
-
-export default Todolist;
