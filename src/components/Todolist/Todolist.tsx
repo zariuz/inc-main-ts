@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValuesType, TaskType} from '../../App';
+import {FilterValuesType, TaskType} from '../../AppWithRedux';
 import './Todolist.css';
 import {AddItemForm} from '../AddItemForm/AddItemForm';
 import {EditableSpan} from '../EditableSpan/EditableSpan';
@@ -13,10 +13,10 @@ type TodolistPropsType = {
   addTask: (todolistId: string, title: string) => void;
   removeTask: (todolistId: string, taskId: string) => void;
   removeTodolist: (todolistId: string) => void;
-  changeFilter: (todolistId: string, value: FilterValuesType) => void;
-  changeTaskStatus: (todolistId: string, id: string, isDone: boolean) => void;
+  changeFilter: (todolistId: string, filter: FilterValuesType) => void;
+  changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void;
   filter: FilterValuesType;
-  updateTask: (todolistId: string, id: string, title: string) => void;
+  updateTask: (todolistId: string, taskId: string, title: string) => void;
   updateTodolist: (todolistId: string, title: string) => void;
 };
 
@@ -33,14 +33,14 @@ export const Todolist = ({
   updateTask,
   updateTodolist,
 }: TodolistPropsType) => {
-  const generalOnClickHandler = (value: FilterValuesType) => {
-    changeFilter(todolistId, value);
+  const generalOnClickHandler = (filter: FilterValuesType) => {
+    changeFilter(todolistId, filter);
   };
 
   const onClickRemoveTodolist = () => removeTodolist(todolistId);
 
   const callbackHandler = (title: string) => {
-    addTask(todolistId, title);
+    addTask(title, todolistId);
   };
 
   const updateTodolistHandler = (title: string) => {
@@ -48,9 +48,9 @@ export const Todolist = ({
   };
 
   const tasksElement = tasks.map((t) => {
-    const onClickRemoveTask = () => removeTask(todolistId, t.id);
+    const onClickRemoveTask = () => removeTask(t.id, todolistId);
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      changeTaskStatus(todolistId, t.id, e.currentTarget.checked);
+      changeTaskStatus(t.id, e.currentTarget.checked, todolistId);
     };
     const updateTaskHandler = (title: string) => {
       updateTask(todolistId, t.id, title);
@@ -58,10 +58,10 @@ export const Todolist = ({
 
     return (
       <li key={t.id} className={'todo__item'}>
-        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone} />
-        <EditableSpan title={t.title} callback={updateTaskHandler} />
+        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
+        <EditableSpan title={t.title} callback={updateTaskHandler}/>
         <IconButton onClick={onClickRemoveTask} aria-label="delete">
-          <Delete fontSize="medium" />
+          <Delete fontSize="medium"/>
         </IconButton>
       </li>
     );
@@ -71,14 +71,14 @@ export const Todolist = ({
     <div>
       <div className="titleName">
         <h3>
-          <EditableSpan title={titleName} callback={updateTodolistHandler} />
+          <EditableSpan title={titleName} callback={updateTodolistHandler}/>
         </h3>
         <IconButton onClick={onClickRemoveTodolist} aria-label="delete">
-          <Delete fontSize="medium" />
+          <Delete fontSize="medium"/>
         </IconButton>
       </div>
 
-      <AddItemForm callback={callbackHandler} />
+      <AddItemForm callback={callbackHandler}/>
 
       <ul className={'todo__list'}>{tasksElement}</ul>
       <div>
