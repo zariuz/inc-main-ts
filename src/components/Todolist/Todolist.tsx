@@ -1,10 +1,11 @@
-import React, {ChangeEvent} from 'react';
+import React, {useCallback} from 'react';
 import {FilterValuesType, TaskType} from '../../AppWithRedux';
 import './Todolist.css';
 import {AddItemForm} from '../AddItemForm/AddItemForm';
 import {EditableSpan} from '../EditableSpan/EditableSpan';
 import {Button, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
+import {Task} from '../Task/Task';
 
 type TodolistPropsType = {
   titleName: string;
@@ -20,7 +21,7 @@ type TodolistPropsType = {
   updateTodolist: (todolistId: string, title: string) => void;
 };
 
-export const Todolist = ({
+export const Todolist: React.FC<TodolistPropsType> = React.memo(({
   titleName,
   todolistId,
   tasks,
@@ -32,40 +33,31 @@ export const Todolist = ({
   filter,
   updateTask,
   updateTodolist,
-}: TodolistPropsType) => {
-  const generalOnClickHandler = (filter: FilterValuesType) => {
+}) => {
+  const generalOnClickHandler = useCallback((filter: FilterValuesType) => {
     changeFilter(todolistId, filter);
-  };
+  }, [changeFilter, todolistId]);
 
   const onClickRemoveTodolist = () => removeTodolist(todolistId);
 
-  const callbackHandler = (title: string) => {
+  const callbackHandler = useCallback((title: string) => {
     addTask(title, todolistId);
-  };
+  }, [addTask, todolistId]);
 
   const updateTodolistHandler = (title: string) => {
     updateTodolist(todolistId, title);
   };
 
-  const tasksElement = tasks.map((t) => {
-    const onClickRemoveTask = () => removeTask(t.id, todolistId);
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      changeTaskStatus(t.id, e.currentTarget.checked, todolistId);
-    };
-    const updateTaskHandler = (title: string) => {
-      updateTask(todolistId, t.id, title);
-    };
+  // filter tasks
+  let tasksForTodoList = tasks
 
-    return (
-      <li key={t.id} className={'todo__item'}>
-        <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
-        <EditableSpan title={t.title} callback={updateTaskHandler}/>
-        <IconButton onClick={onClickRemoveTask} aria-label="delete">
-          <Delete fontSize="medium"/>
-        </IconButton>
-      </li>
-    );
-  });
+  if (filter === 'active') {
+    tasksForTodoList = tasks.filter((t) => !t.isDone);
+  }
+
+  if (filter === 'completed') {
+    tasksForTodoList = tasks.filter((t) => t.isDone);
+  }
 
   return (
     <div>
@@ -80,7 +72,14 @@ export const Todolist = ({
 
       <AddItemForm callback={callbackHandler}/>
 
-      <ul className={'todo__list'}>{tasksElement}</ul>
+      <ul className={'todo__list'}>
+        {tasksForTodoList.map((task) => {
+          return <Task key={task.id} task={task} todolistId={todolistId} removeTask={removeTask}
+                       changeTaskStatus={changeTaskStatus}
+                       updateTask={updateTask}/>
+        })}
+      </ul>
+
       <div>
         <Button
           onClick={() => generalOnClickHandler('all')}
@@ -102,4 +101,4 @@ export const Todolist = ({
       </div>
     </div>
   );
-};
+});

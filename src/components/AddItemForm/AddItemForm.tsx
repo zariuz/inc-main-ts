@@ -6,7 +6,7 @@ type PropsType = {
   callback: (title: string) => void;
 };
 
-export const AddItemForm: React.FC<PropsType> = ({callback}) => {
+export const AddItemForm: React.FC<PropsType> = React.memo(({callback}) => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ export const AddItemForm: React.FC<PropsType> = ({callback}) => {
     <div>
       <TextField
         id="outlined-basic"
-        label={error ? 'Title is required' : ''}
+        label={error ? 'Title is required' : 'Title'}
         variant="outlined"
         size="small"
         value={title}
@@ -60,4 +60,4 @@ export const AddItemForm: React.FC<PropsType> = ({callback}) => {
       </Button>
     </div>
   );
-};
+});
