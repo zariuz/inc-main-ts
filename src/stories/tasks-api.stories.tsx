@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react'
-import {todolistAPI} from '../api/todolist-api';
+import {taskAPI} from '../api/task-api';
 
 export default {
-  title: 'API Todo',
+  title: 'API Task',
 }
 
-export const GetTodolists = () => {
+export const GetTasks = () => {
   const [state, setState] = useState<any>(null)
   useEffect(() => {
-    todolistAPI.getTodos()
+    const todolistId = 'a527dedd-6141-47de-a95e-0fc2395d3b35'
+    taskAPI.getTasks(todolistId)
       .then((res) => {
         setState(res.data);
       })
@@ -18,10 +19,12 @@ export const GetTodolists = () => {
   return <div> {JSON.stringify(state)}</div>
 }
 
-export const CreateTodolist = () => {
+export const CreateTask = () => {
   const [state, setState] = useState<any>(null)
   useEffect(() => {
-    todolistAPI.createTodolist('newTodolist')
+    const todolistId = 'a527dedd-6141-47de-a95e-0fc2395d3b35'
+    const title = 'Vue.js!'
+    taskAPI.createTask(todolistId, title)
       .then((res) => {
         setState(res.data);
       })
@@ -31,11 +34,12 @@ export const CreateTodolist = () => {
   return <div> {JSON.stringify(state)}</div>
 }
 
-export const DeleteTodolist = () => {
+export const DeleteTask = () => {
   const [state, setState] = useState<any>(null)
   useEffect(() => {
-    const todolistId = '82fcf061-32a9-4a19-8be6-2f184cc611aa';
-    todolistAPI.deleteTodolist(todolistId)
+    const todolistId = 'a527dedd-6141-47de-a95e-0fc2395d3b35';
+    const taskId = '3a7e9c18-0b3d-40e2-817a-10ba648aadef'
+    taskAPI.deleteTask(todolistId, taskId)
       .then((res) => {
         setState(res.data);
       })
@@ -45,11 +49,14 @@ export const DeleteTodolist = () => {
   return <div> {JSON.stringify(state)}</div>
 }
 
-export const UpdateTodolistTitle = () => {
+export const UpdateTaskTitle = () => {
   const [state, setState] = useState<any>(null)
   useEffect(() => {
-    const todolistId = '8df6e4f4-9b90-4813-b660-df42e4a3aacc'
-    todolistAPI.updateTodolist(todolistId, 'REACT!!!!!')
+    const todolistId = 'a527dedd-6141-47de-a95e-0fc2395d3b35'
+    const title = 'Node.js cool!'
+    const taskId = '77f81b01-2039-4550-91c1-cb784778d0eb'
+
+    taskAPI.updateTask(todolistId, title, taskId)
       .then((res) => {
         setState(res.data)
       })

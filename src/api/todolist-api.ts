@@ -15,10 +15,11 @@ type TodolistType = {
   title: string
 }
 
-type ResponseType<D> = {
+type ResponseType<T> = {
   resultCode: number
   messages: Array<string>
-  data: D
+  fieldsErrors: Array<string>
+  data: T
 }
 
 export const todolistAPI = {
