@@ -53,10 +53,17 @@ export const UpdateTaskTitle = () => {
   const [state, setState] = useState<any>(null)
   useEffect(() => {
     const todolistId = 'a527dedd-6141-47de-a95e-0fc2395d3b35'
-    const title = 'Node.js cool!'
+    const model = {
+      title: 'Node.JS',
+      description: 'Node.JS',
+      status: 1,
+      priority: 1,
+      startDate: '2021',
+      deadline: '2022',
+    }
     const taskId = '77f81b01-2039-4550-91c1-cb784778d0eb'
 
-    taskAPI.updateTask(todolistId, title, taskId)
+    taskAPI.updateTask(todolistId, taskId, model)
       .then((res) => {
         setState(res.data)
       })

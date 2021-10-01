@@ -1,16 +1,4 @@
-import {FilterValuesType, TodolistsType} from '../AppWithRedux';
-import {v1} from 'uuid';
-
-export type RemoveTodoListAT = {
-  type: 'REMOVE-TODOLIST';
-  todolistId: string;
-}
-
-export type AddTodoListAT = {
-  type: 'ADD-TODOLIST';
-  title: string;
-  todolistId: string;
-}
+import {TodolistsType} from '../api/todolist-api';
 
 export type ChangeTodoListTitleAT = {
   type: 'CHANGE-TODOLIST-TITLE';
@@ -24,16 +12,16 @@ export type ChangeTodoListFilterAT = {
   filter: FilterValuesType;
 }
 
-export type ActionType = RemoveTodoListAT | AddTodoListAT | ChangeTodoListTitleAT | ChangeTodoListFilterAT
+const initialState: Array<TodolistDomainType> = []
 
-const initialState: Array<TodolistsType> = []
-
-export const todolistsReducer = (state: Array<TodolistsType> = initialState, action: ActionType): Array<TodolistsType> => {
+export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionType): Array<TodolistDomainType> => {
   switch (action.type) {
+    case 'SET-TODOLISTS':
+      return action.todolists.map(tl => ({...tl, filter: 'all'}))
     case 'REMOVE-TODOLIST':
       return state.filter((tl) => tl.id !== action.todolistId)
     case 'ADD-TODOLIST':
-      return [{id: action.todolistId, title: action.title, filter: 'all'}, ...state]
+      return [{...action.todolist, filter: 'all'}, ...state]
     case 'CHANGE-TODOLIST-TITLE':
       return state.map((tl) => (tl.id === action.todolistId ? {...tl, title: action.title} : tl))
     case 'CHANGE-TODOLIST-FILTER':
@@ -43,20 +31,10 @@ export const todolistsReducer = (state: Array<TodolistsType> = initialState, act
   }
 }
 
-export const RemoveTodoListAC = (todolistId: string): RemoveTodoListAT => (
-  {
-    type: 'REMOVE-TODOLIST',
-    todolistId: todolistId,
-  }
-)
-
-export const AddTodoListAC = (title: string): AddTodoListAT => (
-  {
-    type: 'ADD-TODOLIST',
-    title: title,
-    todolistId: v1(),
-  }
-)
+// actions
+export const setTodolistsAC = (todolists: Array<TodolistsType>) => ({type: 'SET-TODOLISTS', todolists} as const)
+export const removeTodolistAC = (todolistId: string) => ({type: 'REMOVE-TODOLIST', todolistId} as const)
+export const addTodolistAC = (todolist: TodolistsType) => ({type: 'ADD-TODOLIST', todolist} as const)
 
 export const ChangeTodoListTitleAC = (todolistId: string, title: string): ChangeTodoListTitleAT => (
   {
@@ -73,3 +51,25 @@ export const ChangeTodoListFilterAC = (todolistId: string, filter: FilterValuesT
     filter: filter,
   }
 )
+
+// thunks
+
+// types
+// Типизируем сразу возвращаемый тип, плюс сокращаем код.
+export type SetTodolistsActionType = ReturnType<typeof setTodolistsAC>
+export type AddTodolistActionType = ReturnType<typeof addTodolistAC>;
+export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>;
+
+type ActionType =
+  RemoveTodolistActionType
+  | AddTodolistActionType
+  | ChangeTodoListTitleAT
+  | ChangeTodoListFilterAT
+  | SetTodolistsActionType
+
+export type FilterValuesType = 'all' | 'active' | 'completed';
+export type TodolistDomainType = TodolistsType & {
+  filter: FilterValuesType
+}
+
+

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {FilterValuesType, TaskType} from '../../AppWithRedux';
+import {FilterValuesType, TaskType} from '../../App';
 import './Todolist.css';
 import {AddItemForm} from '../AddItemForm/AddItemForm';
 import {EditableSpan} from '../EditableSpan/EditableSpan';
